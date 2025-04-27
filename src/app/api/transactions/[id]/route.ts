@@ -1,0 +1,43 @@
+import { NextRequest, NextResponse } from 'next/server';
+import prisma from '@/lib/prisma';
+
+// Update a transaction by ID
+export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+  const data = await req.json();
+  const transactionId = parseInt(params.id); // Ensure the ID is a number
+  
+  // Validate the ID
+  if (isNaN(transactionId)) {
+    return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
+  }
+
+  try {
+    const transaction = await prisma.transaction.update({
+      where: { id: transactionId },
+      data,
+    });
+
+    return NextResponse.json(transaction);
+  } catch (error) {
+    return NextResponse.json({ error: 'Transaction not found or other error' }, { status: 404 });
+  }
+}
+
+// Delete a transaction by ID
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+  const transactionId = parseInt(params.id); // Ensure the ID is a number
+
+  // Validate the ID
+  if (isNaN(transactionId)) {
+    return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
+  }
+
+  try {
+    await prisma.transaction.delete({
+      where: { id: transactionId },
+    });
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    return NextResponse.json({ error: 'Transaction not found or other error' }, { status: 404 });
+  }
+}

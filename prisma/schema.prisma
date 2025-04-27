@@ -1,0 +1,30 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Transaction {
+  id          Int      @id @default(autoincrement())
+  amount      Float
+  date        DateTime
+  description String
+  category    String
+}
+
+model Budget {
+  id       Int      @id @default(autoincrement())
+  category String
+  amount   Float
+  month    DateTime
+
+  @@unique([category, month]) // Add the composite unique constraint here
+}
+
+model Category {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+}
