@@ -3,14 +3,25 @@
 import { useEffect, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
+// Define types
+interface Transaction {
+  date: string;
+  amount: number;
+}
+
+interface MonthlyData {
+  name: string;
+  expense: number;
+}
+
 export default function MonthlyExpensesChart() {
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<MonthlyData[]>([]);
 
   useEffect(() => {
     fetch('/api/transactions')
       .then(res => res.json())
-      .then(transactions => {
-        const monthlyData = transactions.map((transaction: any) => ({
+      .then((transactions: Transaction[]) => {
+        const monthlyData = transactions.map((transaction) => ({
           name: transaction.date.slice(0, 7), // Get the year-month part
           expense: transaction.amount,
         }));

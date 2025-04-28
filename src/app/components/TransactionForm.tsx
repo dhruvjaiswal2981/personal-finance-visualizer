@@ -1,6 +1,6 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import Button from './ui/Button';
@@ -8,15 +8,22 @@ import Input from './ui/Input';
 import Select from './ui/Select';
 import { useEffect, useState } from 'react';
 
+// Define the schema
 const formSchema = z.object({
-  amount: z.number(),
+  amount: z.string(),  // amount is a string initially
   date: z.string(),
   description: z.string(),
   category: z.string(),
 });
 
+type FormData = z.infer<typeof formSchema>; // Automatically infers the type from the schema
+
+interface Category {
+  name: string;
+}
+
 export default function TransactionForm() {
-  const { register, handleSubmit, reset } = useForm({
+  const { register, handleSubmit, reset } = useForm<FormData>({
     resolver: zodResolver(formSchema),
   });
 
@@ -26,12 +33,13 @@ export default function TransactionForm() {
     // Fetch categories from the API and update state
     fetch('/api/categories')
       .then(res => res.json())
-      .then(data => setCategories(data.map((c: any) => c.name)));
+      .then((data: Category[]) => setCategories(data.map((c) => c.name)));
   }, []);
 
-  const onSubmit = async (data: any) => {
+  // Type the data parameter properly
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
     // Ensure the amount is a number and date is a proper Date object
-    const amount = parseFloat(data.amount);
+    const amount = parseFloat(data.amount);  // parse the string as a number
     const date = new Date(data.date);
 
     if (isNaN(amount) || !date.getTime()) {

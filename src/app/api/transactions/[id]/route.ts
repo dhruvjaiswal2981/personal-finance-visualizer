@@ -21,7 +21,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     });
 
     return NextResponse.json(transaction);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Transaction not found or other error' }, { status: 404 });
   }
 }
@@ -42,7 +42,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
       where: { id: transactionId },
     });
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Transaction not found or other error' }, { status: 404 });
   }
 }

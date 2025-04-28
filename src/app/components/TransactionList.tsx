@@ -26,8 +26,12 @@ export default function TransactionList() {
         }
         const data = await res.json();
         setTransactions(data);
-      } catch (error: any) {
-        setError(error.message);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError('An unknown error occurred');
+        }
       } finally {
         setIsLoading(false);
       }
@@ -47,8 +51,12 @@ export default function TransactionList() {
       // Refresh transaction list after deletion
       const updatedTransactions = transactions.filter(transaction => transaction.id !== id);
       setTransactions(updatedTransactions);
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unknown error occurred');
+      }
     }
   };
 
@@ -75,8 +83,12 @@ export default function TransactionList() {
         setTransactions(updatedTransactions);
         setEditMode(false); // Close the edit form after saving
         setCurrentTransaction(null);
-      } catch (error: any) {
-        setError(error.message);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError('An unknown error occurred');
+        }
       }
     }
   };
