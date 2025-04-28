@@ -16,7 +16,7 @@ const formSchema = z.object({
 });
 
 export default function TransactionForm() {
-  const { register, handleSubmit, reset, setValue } = useForm({
+  const { register, handleSubmit, reset } = useForm({
     resolver: zodResolver(formSchema),
   });
 

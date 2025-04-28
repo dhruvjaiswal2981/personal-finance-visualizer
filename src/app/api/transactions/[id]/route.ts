@@ -2,10 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
 // Update a transaction by ID
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const data = await req.json();
-  const transactionId = parseInt(params.id); // Ensure the ID is a number
   
+  // Await params to access its properties
+  const { id } = await params; 
+  const transactionId = parseInt(id, 10); // Use the awaited id
+
   // Validate the ID
   if (isNaN(transactionId)) {
     return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
@@ -24,8 +27,10 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 }
 
 // Delete a transaction by ID
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
-  const transactionId = parseInt(params.id); // Ensure the ID is a number
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  // Await params to access its properties
+  const { id } = await params; 
+  const transactionId = parseInt(id, 10); // Use the awaited id
 
   // Validate the ID
   if (isNaN(transactionId)) {

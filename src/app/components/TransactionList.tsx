@@ -45,7 +45,8 @@ export default function TransactionList() {
         throw new Error('Failed to delete transaction');
       }
       // Refresh transaction list after deletion
-      fetchTransactions();
+      const updatedTransactions = transactions.filter(transaction => transaction.id !== id);
+      setTransactions(updatedTransactions);
     } catch (error: any) {
       setError(error.message);
     }
@@ -70,7 +71,8 @@ export default function TransactionList() {
           throw new Error('Failed to update transaction');
         }
         // Refresh transaction list after update
-        fetchTransactions();
+        const updatedTransactions = await res.json();
+        setTransactions(updatedTransactions);
         setEditMode(false); // Close the edit form after saving
         setCurrentTransaction(null);
       } catch (error: any) {
@@ -90,7 +92,7 @@ export default function TransactionList() {
   if (error) {
     return (
       <div className="text-center text-green-500 py-4 text-lg">
-        <p>Transaction successfully!</p>
+        <p>{error}</p>
       </div>
     );
   }
@@ -118,10 +120,15 @@ export default function TransactionList() {
           <form
             onSubmit={(e) => {
               e.preventDefault();
+              const form = e.target as HTMLFormElement;
+              const description = (form.elements.namedItem('description') as HTMLInputElement).value;
+              const amount = parseFloat((form.elements.namedItem('amount') as HTMLInputElement).value);
+              const category = (form.elements.namedItem('category') as HTMLInputElement).value;
+              
               updateTransaction({
-                description: e.target.description.value,
-                amount: parseFloat(e.target.amount.value),
-                category: e.target.category.value,
+                description,
+                amount,
+                category,
               });
             }}
           >
