@@ -2,20 +2,20 @@ import { PrismaClient } from '@prisma/client';
 
 // Extend the global object type to include prisma
 declare global {
+  // eslint-disable-next-line no-var
   var prisma: PrismaClient | undefined;
 }
 
 class PrismaSingleton {
-  private static prismaInstance: PrismaClient;
+  private static instance: PrismaClient;
 
-  // Private constructor to prevent direct instantiation
   private constructor() {}
 
-  static getInstance(): PrismaClient {
-    if (!PrismaSingleton.prismaInstance) {
-      PrismaSingleton.prismaInstance = new PrismaClient();
+  public static getInstance(): PrismaClient {
+    if (!PrismaSingleton.instance) {
+      PrismaSingleton.instance = new PrismaClient();
     }
-    return PrismaSingleton.prismaInstance;
+    return PrismaSingleton.instance;
   }
 }
 
