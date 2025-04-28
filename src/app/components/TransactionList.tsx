@@ -26,11 +26,11 @@ export default function TransactionList() {
         }
         const data = await res.json();
         setTransactions(data);
-      } catch (error: unknown) {
+      } catch (error: unknown) {   // ✅ changed from `any` to `unknown`
         if (error instanceof Error) {
           setError(error.message);
         } else {
-          setError('An unknown error occurred');
+          setError('An unexpected error occurred');
         }
       } finally {
         setIsLoading(false);
@@ -48,14 +48,13 @@ export default function TransactionList() {
       if (!res.ok) {
         throw new Error('Failed to delete transaction');
       }
-      // Refresh transaction list after deletion
       const updatedTransactions = transactions.filter(transaction => transaction.id !== id);
       setTransactions(updatedTransactions);
-    } catch (error: unknown) {
+    } catch (error: unknown) {   // ✅ changed from `any` to `unknown`
       if (error instanceof Error) {
         setError(error.message);
       } else {
-        setError('An unknown error occurred');
+        setError('An unexpected error occurred');
       }
     }
   };
@@ -78,16 +77,15 @@ export default function TransactionList() {
         if (!res.ok) {
           throw new Error('Failed to update transaction');
         }
-        // Refresh transaction list after update
         const updatedTransactions = await res.json();
         setTransactions(updatedTransactions);
-        setEditMode(false); // Close the edit form after saving
+        setEditMode(false);
         setCurrentTransaction(null);
-      } catch (error: unknown) {
+      } catch (error: unknown) {   // ✅ changed from `any` to `unknown`
         if (error instanceof Error) {
           setError(error.message);
         } else {
-          setError('An unknown error occurred');
+          setError('An unexpected error occurred');
         }
       }
     }
@@ -103,7 +101,7 @@ export default function TransactionList() {
 
   if (error) {
     return (
-      <div className="text-center text-green-500 py-4 text-lg">
+      <div className="text-center text-red-500 py-4 text-lg">
         <p>{error}</p>
       </div>
     );
@@ -136,7 +134,7 @@ export default function TransactionList() {
               const description = (form.elements.namedItem('description') as HTMLInputElement).value;
               const amount = parseFloat((form.elements.namedItem('amount') as HTMLInputElement).value);
               const category = (form.elements.namedItem('category') as HTMLInputElement).value;
-              
+
               updateTransaction({
                 description,
                 amount,
@@ -213,7 +211,6 @@ export default function TransactionList() {
                 <div className="mt-4 text-xs text-gray-500">
                   <p className="truncate">{transaction.description}</p>
                 </div>
-                {/* Edit and Delete buttons */}
                 <div className="mt-4 flex justify-between">
                   <button
                     className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-400"

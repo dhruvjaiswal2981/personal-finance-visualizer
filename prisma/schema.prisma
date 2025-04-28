@@ -15,6 +15,7 @@ model Transaction {
   category    String
 }
 
+
 model Budget {
   id       Int      @id @default(autoincrement())
   category String
